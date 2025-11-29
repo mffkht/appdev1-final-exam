@@ -1,42 +1,130 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: 'Work Sans', sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 500px;
   padding: 2rem;
-  text-align: center;
+  box-sizing: border-box;
+  color: white;
+  position: relative;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Title */
+.title {
+  font-size: 4rem;
+  margin: 0;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Todo Form */
+.todo-form {
+  display: flex;
+  width: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.todo-input {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border-radius: 25px 0 0 25px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
 }
 
-.card {
-  padding: 2em;
+.todo-button {
+  padding: 0.8rem 1rem;
+  border-radius: 0 25px 25px 0;
+  border: none;
+  cursor: pointer;
+  background-color: #1c90f0;
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
 }
 
-.read-the-docs {
-  color: #888;
+.todo-button:hover {
+  background-color: #0f6fcf;
+}
+
+/* Todo List */
+.todo-list {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.todo-item {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.8rem 1rem;
+  border-radius: 15px;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: background-color 0.3s ease;
+}
+
+.todo-item.completed span {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todo-date {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.todo-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.todo-actions button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.todo-actions button:hover {
+  color: #00ff00;
+}
+
+/* Theme toggle circles */
+.theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.circle.active {
+  background-color: white;
 }

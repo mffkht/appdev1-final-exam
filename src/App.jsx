@@ -1,100 +1,82 @@
-// src/App.jsx
 import React, { useState, useEffect } from "react";
 import "./App.css";
+
+const themes = {
+  dark: "#0b1a23",
+  light: "#f0f8ff",
+  standard: "#0d2a37",
+};
 
 const App = () => {
   const [todos, setTodos] = useState([]);
   const [todoInput, setTodoInput] = useState("");
-  const [theme, setTheme] = useState(
-    localStorage.getItem("savedTheme") || "standard"
-  );
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
 
-  // Load todos from localStorage
   useEffect(() => {
     const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
     setTodos(savedTodos);
   }, []);
 
-  // Save todos to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  // Apply theme to body
   useEffect(() => {
-    document.body.className = theme;
+    localStorage.setItem("theme", theme);
+    document.body.style.backgroundColor = themes[theme];
   }, [theme]);
 
-  // Add todo
   const addTodo = (e) => {
     e.preventDefault();
-    if (!todoInput.trim()) return alert("You must write something!");
-    const newTodo = { text: todoInput.trim(), completed: false };
-    setTodos((prev) => [...prev, newTodo]);
+    const trimmed = todoInput.trim();
+    if (!trimmed) return;
+    setTodos((prev) => [...prev, { text: trimmed, completed: false, date: new Date() }]);
     setTodoInput("");
   };
 
-  // Delete todo
+  const toggleComplete = (index) => {
+    setTodos((prev) =>
+      prev.map((todo, i) => (i === index ? { ...todo, completed: !todo.completed } : todo))
+    );
+  };
+
   const deleteTodo = (index) => {
     setTodos((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Toggle completed
-  const toggleComplete = (index) => {
-    setTodos((prev) =>
-      prev.map((todo, i) =>
-        i === index ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
-
   return (
     <div className="app">
-      <h1 id="title" className={theme === "darker" ? "darker-title" : ""}>
-        Todo App
-      </h1>
-
-      {/* Theme Buttons */}
-      <div className="theme-buttons">
-        <button onClick={() => setTheme("standard")}>Standard</button>
-        <button onClick={() => setTheme("light")}>Light</button>
-        <button onClick={() => setTheme("darker")}>Darker</button>
+      {/* Theme Circles */}
+      <div className="theme-toggle">
+        <span className={`circle ${theme === "standard" ? "active" : ""}`} onClick={() => setTheme("standard")}></span>
+        <span className={`circle ${theme === "light" ? "active" : ""}`} onClick={() => setTheme("light")}></span>
+        <span className={`circle ${theme === "dark" ? "active" : ""}`} onClick={() => setTheme("dark")}></span>
       </div>
 
-      {/* Add Todo */}
-      <form onSubmit={addTodo}>
+      <h1 className="title">Just do it.</h1>
+
+      <form className="todo-form" onSubmit={addTodo}>
         <input
+          className="todo-input"
           type="text"
-          className={`${theme}-input`}
+          placeholder="Add a task."
           value={todoInput}
           onChange={(e) => setTodoInput(e.target.value)}
-          placeholder="Add a todo..."
         />
-        <button className={`todo-btn ${theme}-button`} type="submit">
-          Add
-        </button>
+        <button className="todo-button" type="submit">I Got This!</button>
       </form>
 
-      {/* Todo List */}
       <ul className="todo-list">
         {todos.map((todo, index) => (
-          <li
-            key={index}
-            className={`todo ${theme}-todo ${todo.completed ? "completed" : ""}`}
-          >
-            <span className="todo-item">{todo.text}</span>
-            <button
-              className={`check-btn ${theme}-button`}
-              onClick={() => toggleComplete(index)}
-            >
-              ✓
-            </button>
-            <button
-              className={`delete-btn ${theme}-button`}
-              onClick={() => deleteTodo(index)}
-            >
-              🗑
-            </button>
+          <li key={index} className={`todo-item ${todo.completed ? "completed" : ""}`}>
+            <span className="todo-date">{new Date(todo.date).toLocaleString()}</span>
+            <div className="todo-content">
+              <span>{todo.text}</span>
+              <div className="todo-actions">
+                <button onClick={() => toggleComplete(index)}>✓</button>
+                <button onClick={() => deleteTodo(index)}>🗑</button>
+              </div>
+            </div>
           </li>
         ))}
       </ul>
@@ -102,7 +84,4 @@ const App = () => {
   );
 };
 
-
-
 export default App;
-
