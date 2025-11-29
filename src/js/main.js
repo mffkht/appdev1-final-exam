@@ -1,18 +1,20 @@
-// src/App.jsx
+// Selectors
+
 import React, { useState, useEffect } from "react";
-import "./App.css";
+import "./App.css"; // Make sure your CSS handles classes like standard, light, darker
 
 const App = () => {
+  // States
   const [todos, setTodos] = useState([]);
   const [todoInput, setTodoInput] = useState("");
   const [theme, setTheme] = useState(
     localStorage.getItem("savedTheme") || "standard"
   );
 
-  // Load todos from localStorage
+  // Load todos from localStorage on mount
   useEffect(() => {
-    const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-    setTodos(savedTodos);
+    const storedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+    setTodos(storedTodos);
   }, []);
 
   // Save todos to localStorage whenever they change
@@ -23,23 +25,28 @@ const App = () => {
   // Apply theme to body
   useEffect(() => {
     document.body.className = theme;
+    localStorage.setItem("savedTheme", theme);
   }, [theme]);
 
-  // Add todo
+  // Add a new todo
   const addTodo = (e) => {
     e.preventDefault();
-    if (!todoInput.trim()) return alert("You must write something!");
-    const newTodo = { text: todoInput.trim(), completed: false };
+    const trimmed = todoInput.trim();
+    if (!trimmed) {
+      alert("You must write something!");
+      return;
+    }
+    const newTodo = { text: trimmed, completed: false };
     setTodos((prev) => [...prev, newTodo]);
     setTodoInput("");
   };
 
-  // Delete todo
+  // Delete a todo
   const deleteTodo = (index) => {
     setTodos((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Toggle completed
+  // Toggle completion
   const toggleComplete = (index) => {
     setTodos((prev) =>
       prev.map((todo, i) =>
@@ -48,24 +55,23 @@ const App = () => {
     );
   };
 
+  // Change theme
+  const changeTheme = (color) => setTheme(color);
+
   return (
     <div className="app">
       <h1 id="title" className={theme === "darker" ? "darker-title" : ""}>
         Todo App
       </h1>
-
-      {/* Theme Buttons */}
       <div className="theme-buttons">
-        <button onClick={() => setTheme("standard")}>Standard</button>
-        <button onClick={() => setTheme("light")}>Light</button>
-        <button onClick={() => setTheme("darker")}>Darker</button>
+        <button onClick={() => changeTheme("standard")}>Standard</button>
+        <button onClick={() => changeTheme("light")}>Light</button>
+        <button onClick={() => changeTheme("darker")}>Darker</button>
       </div>
-
-      {/* Add Todo */}
       <form onSubmit={addTodo}>
         <input
-          type="text"
           className={`${theme}-input`}
+          type="text"
           value={todoInput}
           onChange={(e) => setTodoInput(e.target.value)}
           placeholder="Add a todo..."
@@ -74,8 +80,6 @@ const App = () => {
           Add
         </button>
       </form>
-
-      {/* Todo List */}
       <ul className="todo-list">
         {todos.map((todo, index) => (
           <li
@@ -102,7 +106,4 @@ const App = () => {
   );
 };
 
-
-
 export default App;
-
